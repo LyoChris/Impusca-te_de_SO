@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "mytr": "c",
+        "types.h": "c",
+        "ctype.h": "c"
+    }
+}

@@ -1,0 +1,11 @@
+head -n 15 /etc/passwd | awk -F: '$7 == "/sbin/nologin" && $1 ~ /[m-z]$ / {print $1}' > max15.txt
+alternativa 1: getent passwd | head -n 15 | awk -F: '$7 == "/sbin/nologin" && $1 ~ /[m-z]$/ {print $1}' > max15.txt
+ps aux | grep 'bash' | grep -E 'pts/[0125][0-9]*' | sort -k 2,2nr > output.txt
+last -n 8 | awk '{print $3}' > filtruIPs.txt
+alternativa: last -n 8 | awk '$1 !~ /^(reboot|shutdown|wtmp|root)$/ {print $3}' > filtruIPs.txt
+ps -eo user,comm,pid --no-headers | tr -s " "  | cut -d" " -f1,2,3 --output-delimiter=: | sort -k2 -t:
+getent passwd | cut -d: -f1,3,4 | sort -t: -k2 -n | sed 's/:/ -> /g'
+last -n 15 -F
+who | awk '{print $1, $2}' | sort | while read user terminal; do ps -u "$user" -o user=,tty=,comm= --no-headers | awk -v u="$user" -v t="$terminal" '$2 ~ /^[?]/ {next} {print u, t, $3}'; done
+getent passwd | awk -F: '$3 > 4681 {print $1}'
+

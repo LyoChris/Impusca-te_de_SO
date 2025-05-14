@@ -1,0 +1,112 @@
+#include <stdio.h> //Standart input/output
+#include <fcntl.h> //Pentru a modifica file si beahivour la I/O
+#include <unistd.h> //Adauga functii specifice POSIX: read, open, write etx
+#include <stdlib.h> //librarie basic de C, face conversii, alocare de memorie
+#include <string.h> //librarie de C pentru stringuri
+#include <sys/types.h> //adauga diverse: off_t, size_t, p/u/gid_t, time_t
+#include <sys/stat.h> //adauga comanda stat si structura asociata
+#include <dirent.h> //adauga structura DIR
+#include <pwd.h>    // necesar pentru functia getpwuid
+#include <grp.h>    // necesar pentru functia getgrgid
+#include <limits.h> // necesar pentru PATH_MAX
+
+
+stat(const char *path, struct stat *buf);
+lstat(const char *path, struct stat *buf);
+fstat(int file_descriptor, struct stat *buf);
+
+
+struct stat {
+    dev_t     st_dev;     // ID of device containing file
+    ino_t     st_ino;     // Inode number
+    mode_t    st_mode;    // File type and permissions
+    nlink_t   st_nlink;   // Number of hard links
+    uid_t     st_uid;     // User ID of owner
+    gid_t     st_gid;     // Group ID of owner
+    dev_t     st_rdev;    // Device ID (if file is a device)
+    off_t     st_size;    // Total size in bytes
+    blksize_t st_blksize; // Optimal blocksize for I/O
+    blkcnt_t  st_blocks;  // Number of 512-byte blocks allocated
+    time_t    st_atime;   // Time of last access
+    time_t    st_mtime;   // Time of last modification
+    time_t    st_ctime;   // Time of last status change
+};
+
+S_IFDIR(stat.st_mode)
+stat.st_mode & S_IFDIR
+
+File Type:
+
+    S_IFREG: Regular file
+
+    S_IFDIR: Directory
+
+    S_IFLNK: Symbolic link
+
+    S_IFBLK: Block device
+
+    S_IFCHR: Character device
+
+File Permissions:
+
+    S_IRUSR: Read permission for user
+
+    S_IWUSR: Write permission for user
+
+    S_IXUSR: Execute permission for user
+
+    S_IRGRP: Read permission for group
+
+    S_IWGRP: Write permission for group
+
+    S_IXGRP: Execute permission for group
+
+    S_IROTH: Read permission for others
+
+    S_IWOTH: Write permission for others
+
+    S_IXOTH: Execute permission for others
+
+
+
+DIR *opendir(const char *name);
+
+struct dirent *entry;
+while ((entry = readdir(dir)) != NULL) {
+    printf("Found: %s\n", entry->d_name);
+}
+
+void rewinddir(DIR *dirp);
+long telldir(DIR *dirp);
+void seekdir(DIR *dirp, long loc);
+    long pos = telldir(dir);  // Save the current position
+    seekdir(dir, pos);        // Go back to the saved position
+
+
+struct dirent {
+    ino_t d_ino;            // Inode number
+    off_t d_off;            // Not used (but required for POSIX)
+    unsigned short d_reclen; // Length of this record
+    unsigned char d_type;    // Type of file (e.g., regular file, directory)
+    char d_name[256];        // Name of the entry (file or directory)
+};
+
+Deverse chestii:
+
+DT_UNKNOWN: Unknown file type.
+
+DT_REG: Regular file.
+
+DT_DIR: Directory.
+
+DT_LNK: Symbolic link.
+
+DT_FIFO: Named pipe (FIFO).
+
+DT_SOCK: Unix domain socket.
+
+DT_CHR: Character device.
+
+DT_BLK: Block device
+
+fprintf(void * buffer1, buffer, size of buffer) 

@@ -1,0 +1,10 @@
+mkdir programe
+
+
+cut -d: -f1,3 --output-delimiter=" - "  /etc/group
+
+grep "^root:" /etc/group
+
+grep ":0:" /etc/passwd
+
+stat -c %h <file_ path>

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+calculeaza_putere() {
+    local k=$1
+    local putere=$2
+
+    if (( k <= n )); then
+        echo "2^$k = $putere" >&2
+
+        calculeaza_putere $((k + 1)) $((putere * 2))
+    fi
+}
+
+if [ $# -eq 0 ]
+then
+    read -p "Dati n: " n
+else
+    n=$1
+fi
+
+calculeaza_putere 0 1
+

@@ -1,0 +1,17 @@
+cd programe
+stat program1.c program2.c program2.h
+chmod u-r program1.c
+chmod ug+x program2.c
+chmod 0440 program2.h
+wc -l -L /etc/mtab
+find ~ -type f -mtime -13 -exec stat --format="%A %y %n" {} \;
+find ~ -type f -perm -300 -exec stat --format="%y %s %n" {} \;
+ps -eo user,comm,pid
+sort -t: -k3,3nr /etc/group
+ps -eo pid,ppid,ruid,euid,comm --user root
+find ~ -type f -o -type d -perm -050 -exec ls -l  {} \; | awk '{print $1, $9}'
+find ~ -type f \( -name "*.c" -o -name "*.cpp" -o -name "*.h" \) -printf "%p %s bytes %TY-%Tm-%Td %TH:%TM:%TS\n"
+find ~ -maxdepth 1 -type f  -name "*.cpp" -size -5k -exec g++ {} -o {}.out 2>> errors.txt \;
+find ~ -type f \( -name "*.htm" -o -name "*.html" -o -name "*.php" -o -name "*.css" \) -exec ls -lh {} \; | awk '{print $9, $5, $6, $7, $8}'
+find ~ -type f \( -name "*~" -o -name "*.bak" \) -exec rm -i {} \;
+
