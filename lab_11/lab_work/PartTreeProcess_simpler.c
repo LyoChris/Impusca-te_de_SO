@@ -29,23 +29,33 @@ int main(int argc, char* argv[]) {
         }
 
         if (pid == 0) {
-            printf("Sunt procesul fiu (%d,%d), cu PID-ul %d si parintele meu este procesul cu PID-ul %d\n", 2, i, getpid(), getppid());
-
+            char buffer[4096];
+            int len = 0;
+        
+            len += sprintf(buffer + len, "Sunt procesul fiu (2,%d), cu PID-ul %d si parintele meu este procesul cu PID-ul %d\n", i, getpid(), getppid());
+            len += sprintf(buffer + len, "  -> Coduri terminare fii: ");
+            fflush(stdout);
+        
             for (int j = 1; j <= n; j++) {
-                if ((pid = fork()) == -1) {
+                if ((pid = fork()) == -1)
                     handle_err("Eroare creare fiu");
-                }
-
+        
                 if (pid == 0) {
-                    printf("Sunt procesul fiu (%d,%d), cu PID-ul %d si parintele meu este procesul cu PID-ul %d\n", 3, (i - 1) * n + j, getpid(), getppid());
-                    return i;
+                    printf("Sunt procesul fiu (3,%d), cu PID-ul %d si parintele meu este procesul cu PID-ul %d \n", (i - 1) * n + j, getpid(), getppid());
+                    fflush(stdout);
+                    return (i - 1) * n + j;
                 }
             }
-
+        
             for (int j = 1; j <= n; j++) {
-                wait(NULL);
+                int codterm;
+                wait(&codterm);
+                len += sprintf(buffer + len, "%d ", codterm >> 8);
             }
-
+        
+            len += sprintf(buffer + len, "\n");
+            write(STDOUT_FILENO, buffer, len);
+        
             return i;
         }
     }
