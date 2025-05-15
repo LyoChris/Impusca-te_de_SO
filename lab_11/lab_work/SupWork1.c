@@ -43,11 +43,11 @@ int N=0;
 
 void calcul_tata() {
 	int fd1, fd2;
-    if((fd1 = open("./operanzi.bin", O_RDONLY)) == -1) {
+    if((fd1 = open("./aux/operanzi.bin", O_RDONLY)) == -1) {
         handle_err("Eroare la deschidere operanzi.bin");
     }
 
-    if((fd2 = open("./operatori.txt", O_RDONLY)) == -1) {
+    if((fd2 = open("./aux/operatori.txt", O_RDONLY)) == -1) {
         handle_err("Eroare la deschidere operatori.txt");
     }
 
@@ -72,7 +72,7 @@ void calcul_tata() {
 
 void generare_fiu1() {
     int fd;
-    if((fd = open("./operanzi.bin", O_RDWR | O_CREAT | O_TRUNC, 0600)) == -1) {
+    if((fd = open("./aux/operanzi.bin", O_RDWR | O_CREAT | O_TRUNC, 0600)) == -1) {
         handle_err("Eroare la deschidere operanzi.bin");
     }
 
@@ -91,7 +91,7 @@ void generare_fiu2()
 {
 	int fd;
     char s[4] = "+-*/";
-    if((fd = open("./operatori.txt", O_RDWR | O_CREAT | O_TRUNC, 0600)) == -1) {
+    if((fd = open("./aux/operatori.txt", O_RDWR | O_CREAT | O_TRUNC, 0600)) == -1) {
         handle_err("Eroare la deschidere operatori.txt");
     }
 

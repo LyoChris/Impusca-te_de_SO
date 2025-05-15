@@ -18,7 +18,7 @@
 #define handle_err(err) \
     { perror(err); exit(EXIT_FAILURE); }
 
-int fd_bin;
+int fd_bin, * map;
 
 int read_flag(int fd) {
     int flag;
@@ -61,45 +61,41 @@ int read_reply(int fd, char* reply) {
 
 
 void dialog_tata() {
-	int fd, flag = -1, status = -1;
+	int fd, status = -1;
     char reply[1024];
     if((fd = open("./aux/replici-tata.txt", O_RDONLY)) < 0) {
         handle_err("Eroare la deschiderea flag.bin");
     }
 
     while(status != 2) {
-        while(flag != 0 && flag != 2) {
-            flag = read_flag(fd_bin);
-        }
+        while(map[1] != 0 && map[1] != 2) {}
         status = read_reply(fd, reply);
-        flag = -1;
+
         if(status == 1) printf("%s\n", reply);
 
-        write_flag(fd_bin, 1);
+        map[1] = 1;
     }
-    write_flag(fd_bin, 2);
+    map[1] = 2;
 }
 
 void dialog_fiu()
 {
-    int fd, flag = -1, status = -1;
+    int fd, status = -1;
     char reply[1024];
     if((fd = open("./aux/replici-fiu.txt", O_RDONLY)) < 0) {
         handle_err("Eroare la deschiderea flag.bin");
     }
 
     while(status != 2) {
-        while(flag != 1 && flag != 2) {
-            flag = read_flag(fd_bin);
-        }
+        while(map[1] != 1 && map[1] != 2) {}
         
         status = read_reply(fd, reply);
-        flag = -1;
+
         if(status == 1) printf("%s\n", reply);
 
-        write_flag(fd_bin, 0);
+        map[1] = 0;
     }
-    write_flag(fd_bin, 2);
+    map[1] = 2;
 }
 
 int main()
@@ -107,17 +103,11 @@ int main()
 	pid_t pid_fiu;
 
 	// TODO: de inițializat cu 0 fișierul flag.bin
-    int fd, a = 0;
-    if((fd = open("./flag.bin", O_WRONLY | O_CREAT | O_TRUNC, 0600)) < 0) {
-        handle_err("Eroare la deschiderea flag.bin");
+    map = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    if(map == MAP_FAILED) {
+        handle_err("Eroare la mmap");
     }
-
-    write(fd, &a, sizeof(int));
-    close(fd);
-
-    if((fd_bin = open("./flag.bin", O_RDWR | O_SYNC)) < 0) {
-        handle_err("Eroare la deschiderea flag.bin");
-    }
+    map[1] = 0;
 
 	if(-1 == (pid_fiu=fork()) )
 	{
