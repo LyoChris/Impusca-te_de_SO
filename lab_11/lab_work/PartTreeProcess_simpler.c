@@ -21,7 +21,13 @@ int main(int argc, char* argv[]) {
     int n = 3, m = 4;
     pid_t pid;
 
-    printf("Sunt primul proces (%d,%d), cu PID-ul %d si parintele meu este procesul cu PID-ul %d.\n", 1, 1, getpid(), getppid());
+    char buffer[4096];
+    int len = 0;
+    pid_t pids[10];
+
+    len += sprintf(buffer + len, "Sunt primul proces (%d,%d), cu PID-ul %d si parintele meu este procesul cu PID-ul %d.\n", 1, 1, getpid(), getppid());
+    len += sprintf(buffer + len, "  -> Coduri terminare fii: ");
+    fflush(stdout);
 
     for (int i = 1; i <= m; i++) {
         if ((pid = fork()) == -1) {
@@ -31,6 +37,7 @@ int main(int argc, char* argv[]) {
         if (pid == 0) {
             char buffer[4096];
             int len = 0;
+            pid_t pids[10];
         
             len += sprintf(buffer + len, "Sunt procesul fiu (2,%d), cu PID-ul %d si parintele meu este procesul cu PID-ul %d\n", i, getpid(), getppid());
             len += sprintf(buffer + len, "  -> Coduri terminare fii: ");
@@ -45,12 +52,15 @@ int main(int argc, char* argv[]) {
                     fflush(stdout);
                     return (i - 1) * n + j;
                 }
+                else {
+                    pids[j] = pid;
+                }
             }
         
             for (int j = 1; j <= n; j++) {
                 int codterm;
                 wait(&codterm);
-                len += sprintf(buffer + len, "%d ", codterm >> 8);
+                len += sprintf(buffer + len, "(PID:%d, COD TERM:%d) ", pids[j],codterm >> 8);
             }
         
             len += sprintf(buffer + len, "\n");
@@ -58,12 +68,20 @@ int main(int argc, char* argv[]) {
         
             return i;
         }
+        else {
+            pids[i] = pid;
+        }
     }
 
     
     for (int i = 1; i <= m; i++) {
-        wait(NULL);
+        int codterm;
+        wait(&codterm);
+        len += sprintf(buffer + len, "(PID:%d, COD TERM:%d) ", pids[i],codterm >> 8);
     }
+        
+    len += sprintf(buffer + len, "\n");
+    write(STDOUT_FILENO, buffer, len);
 
     return 0;
 }

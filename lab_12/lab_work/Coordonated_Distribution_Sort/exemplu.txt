@@ -1,0 +1,6 @@
+alice:deptA:42:pending
+bob:deptB:7:complete
+carol:deptC:15:in-progress
+dave:deptD:23:review
+eve:deptE:3:new
+frank:deptF:19:closed
