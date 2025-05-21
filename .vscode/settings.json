@@ -3,6 +3,7 @@
         "mytr": "c",
         "types.h": "c",
         "ctype.h": "c",
-        "wait.h": "c"
+        "wait.h": "c",
+        "semaphore.h": "c"
     }
 }
