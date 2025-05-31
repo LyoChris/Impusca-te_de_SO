@@ -23,7 +23,7 @@ void disable_buffering() {
     newt.c_cc[VMIN] = 1;  // Citirea unui singur caracter
     newt.c_cc[VTIME] = 0; // Fără timeout
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-}
+}   
 
 void enable_buffering() {
     struct termios newt;

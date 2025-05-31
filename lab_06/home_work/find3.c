@@ -24,8 +24,7 @@ void del_links(char* cale_cur) {
             return;
         }
         
-        target[len] = '\0'; 
-        printf("%s %s\n", cale_cur, target);
+        target[len] = '\0';
         if(access(target, F_OK) == -1) {
                 if(unlink(cale_cur) == -1) {
                     perror("Eroare la ștergerea legăturii simbolice");

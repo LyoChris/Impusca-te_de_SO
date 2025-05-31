@@ -27,7 +27,7 @@ int lock_file_seg(int fd, int index) {
     return fcntl(fd, F_SETLKW, &lock);
 
     /*
-    while (fcntl(fd, F_SETLKw, &lock) == -1 && (errno == EAGAIN || errno == EACCES)) {
+    while (fcntl(fd, F_SETLK, &lock) == -1) {
         if (errno == EAGAIN || errno == EACCES) usleep(RETRY_INTERVAL);
         else {
             perror(Eroare fatala la lock de fisiere);
