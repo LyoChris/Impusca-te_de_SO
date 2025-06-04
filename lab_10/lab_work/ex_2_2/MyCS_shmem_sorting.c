@@ -91,7 +91,7 @@ void bubble_sort_mmap(int *v, int n, sem_t *sem) {
     while(modificare) {
         modificare = 0;
         for(int i = 0; i < n - 1; ++i) {
-            sem_wait(sem);
+            sem_wait(sem); //1 -> 0 
 
             if(v[i] > v[i + 1]) {
                 int aux = v[i];
@@ -100,7 +100,7 @@ void bubble_sort_mmap(int *v, int n, sem_t *sem) {
                 modificare = 1;
             }
 
-            sem_post(sem);
+            sem_post(sem); // 0 -> 1
             usleep(100);
         }
     }
