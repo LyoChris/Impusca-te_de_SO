@@ -12,7 +12,7 @@ dir_path=$(dirname $(realpath $0))
 path_to_worker2="$dir_path/main_app/procesators/worker2"
 path_to_supervisor="$dir_path/main_app/supervisor"
 
-path_to_data="$dir_path/in_data.txt"
+path_to_data="$dir_path/data/input.txt"
 
 if [ "$p" -eq 0 ]; then
     $path_to_worker2 &

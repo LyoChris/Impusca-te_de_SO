@@ -75,7 +75,7 @@ void numbers_from_worker1(char* file) {
     sprintf(number, "%d", sum);
     num = 0;
 
-    for(int i = 0; i < strlen(number); i++) {
+    for(int i = 0; i < strlen(number); i++) { 
         num += (number[i] - '0');
     }
 
