@@ -4,6 +4,7 @@
         "types.h": "c",
         "ctype.h": "c",
         "wait.h": "c",
-        "semaphore.h": "c"
+        "semaphore.h": "c",
+        "limits.h": "c"
     }
 }

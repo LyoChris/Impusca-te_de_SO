@@ -16,6 +16,8 @@
 #include <limits.h>
 
 #define FIFO "./fifo1"
+typedef struct vrajeala { int a, b, c; } edging;
+typedef struct vrajeala2 { int a, b, c, P, A; } triangle;
 
 void triplets_to_binary_sex(char* file) {
     int fd;
@@ -26,18 +28,15 @@ void triplets_to_binary_sex(char* file) {
 
     int count = 0;
     char line[1024], ch;
-    while(read(fd, &ch, sizeof(char)) > 0) {
+    while(read(fd, &ch, sizeof(char)) == 1) {
         if(ch == '\n') {
             if(count > 0) {
                 line[count] = '\0';
                 count = 0;
-                int a, b, c;
-                sscanf(line, "%d %d %d", &a, &b, &c);
+                edging yes;
+                sscanf(line, "%d %d %d", &yes.a, &yes.b, &yes.c);
 
-                write(STDOUT_FILENO, &a, sizeof(int));
-                write(STDOUT_FILENO, &b, sizeof(int));
-                write(STDOUT_FILENO, &c, sizeof(int));
-                //printf("%d %d %d\n", a, b, c);
+                write(STDOUT_FILENO, &yes, sizeof(edging));
             }
         }
         else {
@@ -47,111 +46,61 @@ void triplets_to_binary_sex(char* file) {
 
     if(count > 0) {
         line[count] = '\0';
-        int a, b, c;
-        sscanf(line, "%d %d %d", &a, &b, &c);
+        edging yes;
+        sscanf(line, "%d %d %d", &yes.a, &yes.b, &yes.c);
 
-        write(STDOUT_FILENO, &a, sizeof(int));
-        write(STDOUT_FILENO, &b, sizeof(int));
-        write(STDOUT_FILENO, &c, sizeof(int));
-        //printf("%d %d %d\n", a, b, c);
+        write(STDOUT_FILENO, &yes, sizeof(edging));
     }
 
     close(fd);
-}
-
-void triplets_to_binary(char* file, int fd_pipe) {
-    int fd;
-    if((fd = open(file, O_RDONLY)) == -1) {
-        perror("Eroare la deschidere fisier");
-        exit(3);
-    }
-
-    int count = 0;
-    char line[1024], ch;
-    while(read(fd, &ch, sizeof(char)) > 0) {
-        if(ch == '\n') {
-            if(count > 0) {
-                line[count] = '\0';
-                count = 0;
-                int vec[3], i = 0;
-                char *p = strtok(line, " ");
-                while(p) {
-                    vec[i++] = atoi(p);
-                    p = strtok(NULL, " ");
-                }
-
-                printf("%d %d %d\n", vec[0], vec[1], vec[2]);
-            }
-        }
-        else{
-            line[count++] = ch;
-        }
-    }
-
-    if(count > 0) {
-            //procesare
-            line[count] = '\0';
-            int vec[3], i = 0;
-            char *p = strtok(line, " ");
-            while(p) {
-            vec[i++] = atoi(p);
-            p = strtok(NULL, " ");
-        }
-
-        printf("%d %d %d\n", vec[0], vec[1], vec[2]);
-    }
-
-    close(fd);
-
+    close(STDOUT_FILENO);
 }
 
 void numering_triangles(int fd_fi) {
-    int a, b, c, P, A, contor1 = 0, contor2 = 0;
+    int contor1 = 0, contor2 = 0;
+    triangle no;
 
-    while(read(fd_fi, &a, sizeof(int)) > 0) {
-        read(fd_fi, &b, sizeof(int));
-        read(fd_fi, &c, sizeof(int));
-        read(fd_fi, &P, sizeof(int));
-        read(fd_fi, &A, sizeof(int));
-
-        if(P != 0) {
-            printf("Tripleta %d,%d,%d reprezintă lungimile laturilor unui triunghi ce are perimetrul %d și aria %d.\n", a, b, c, P, A);
+    while(read(fd_fi, &no, sizeof(triangle)) > 0) {
+        if(no.P != 0) {
+            printf("Tripleta %d,%d,%d reprezintă lungimile laturilor unui triunghi ce are perimetrul %d și aria %d.\n", no.a, no.b, no.c, no.P, no.A);
             contor1++;
         }
         else {
             contor2++;
-            printf("Tripleta %d,%d,_%d nu poate reprezenta lungimile laturilor unui triunghi.\n", a, b, c);   
+            printf("Tripleta %d,%d,%d nu poate reprezenta lungimile laturilor unui triunghi.\n", no.a, no.b, no.c);   
         }
     }
 
     printf("Perechi bune:%d, perechi nebune: %d.\n", contor1, contor2);
 
+
+    exit(0);
 }
 
 int main(int argc, char* argv[]) {
-    if(argc != 2) {
-        fprintf(stderr, "USAGE: %s [INPUT FILE]\n", argv[0]);
+    if(argc != 3) {
+        fprintf(stderr, "USAGE: %s [INPUT FILE] [STD]\n", argv[0]);
         exit(1);
     }
 
-    int pipe_fd[2];
-    if(pipe(pipe_fd) == -1) {
-        perror("Eroare la pipe");
-        exit(1);
-    }
+    int saved = atoi(argv[2]);
+
+    triplets_to_binary_sex(argv[1]);
+
+    fflush(stdout);
+    dup2(saved, STDOUT_FILENO);
+    close(saved);
+    
 
     int fd_fifo;
     while((fd_fifo = open(FIFO, O_RDONLY)) == -1) {
-        if(errno == ENOENT) continue;
+        if(errno == ENOENT) { continue; }
         perror("Eroare la deschidere fifo");
         exit(2);
     }
 
-    //triplets_to_binary(argv[1], pipe_fd[1]);
-    triplets_to_binary_sex(argv[1]);
-
     numering_triangles(fd_fifo);
-
-
+    
+    close(fd_fifo);
+    return 0;
 }
-

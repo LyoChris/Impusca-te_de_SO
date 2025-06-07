@@ -43,6 +43,7 @@ void replacer_diff_file(int input_fd, int output_fd, char replaced, char replace
             perror("Eroare mmap input");
             exit(5);
         }
+
         mmap_output = mmap(NULL, sb_in.st_size, PROT_WRITE, MAP_SHARED, output_fd, 0);
         if (mmap_output == MAP_FAILED) {
             perror("Eroare mmap output");
@@ -61,7 +62,7 @@ void replacer_diff_file(int input_fd, int output_fd, char replaced, char replace
         write(STDOUT_FILENO, mmap_input, sb_in.st_size);
         printf("\n");
         for(int i = 0; i < sb_in.st_size; i++) {
-            if(*(mmap_input + i) == replaced) { //mmap_input[i]
+            if(mmap_input[i] == replaced) { //mmap_input[i]
                 *(mmap_output + i) = replacer;
             }
             else {
@@ -109,7 +110,7 @@ void replacer_same_file(int input_fd, char replaced, char replacer) {
     write(STDOUT_FILENO, mmap_inout, sb_in.st_size);
     printf("\n");
     for(int i = 0; i < sb_in.st_size; i++) {
-        if(*(mmap_inout + i) == replaced) {
+        if(*(mmap_inout + i) == replaced) { //mmap_inout[i]
             *(mmap_inout + i) = replacer;
         }
     }
@@ -157,10 +158,10 @@ int main(int argc, char* argv[]) {
     }
 
     input_fd = open(input, O_RDONLY);
-    if(input_fd == -1){
+    if(input_fd == -1)
         perror("Eroare la deschiderea fisierului de intrare");
         return 1;
-    }
+    
 
     if(strcmp(input, output) == 0) {
         if(checker(output)) {
