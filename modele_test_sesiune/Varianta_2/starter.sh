@@ -6,6 +6,7 @@ else
     echo "Numar incorec de argumente"
 fi
 
+
 dir_path=$(dirname $(realpath $0))
 path_to_worker1="$dir_path/subordinates/worker1"
 path_to_worker2="$dir_path/subordinates/worker2"

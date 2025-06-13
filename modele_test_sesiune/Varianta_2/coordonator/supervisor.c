@@ -77,6 +77,7 @@ void numering_triangles(int fd_fi) {
     exit(0);
 }
 
+
 int main(int argc, char* argv[]) {
     if(argc != 3) {
         fprintf(stderr, "USAGE: %s [INPUT FILE] [STD]\n", argv[0]);
@@ -95,9 +96,10 @@ int main(int argc, char* argv[]) {
     int fd_fifo;
     while((fd_fifo = open(FIFO, O_RDONLY)) == -1) {
         if(errno == ENOENT) { continue; }
-        perror("Eroare la deschidere fifo");
+        perror("Eroare la fifo");
         exit(2);
     }
+    //Dau foc la C5
 
     numering_triangles(fd_fifo);
     
