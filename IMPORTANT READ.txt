@@ -1,0 +1,1 @@
+Acesta este un git care contine majoritatea problemelor de la laborator impreuna cu rezolvarile lor, plus diverse variante pentru partial si sesiune. Documentul grile_so contine foarte mult grile, impreuna cu raspunsuri.
