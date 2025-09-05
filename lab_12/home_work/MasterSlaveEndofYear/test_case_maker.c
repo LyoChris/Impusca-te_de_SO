@@ -16,7 +16,7 @@
 #include <semaphore.h>
 #include <limits.h>
 
-//WARNING: asta e cod scris la 2 noaptea pe doua cafele si un corn, in timp ce se iau morti in pula din 
+//WARNING: asta e cod scris la 2 noaptea pe doua cafele si un corn, din 
 //cauza ca un om nu imi da test cases umane, proceed at your own risk
 
 int months = 12;
